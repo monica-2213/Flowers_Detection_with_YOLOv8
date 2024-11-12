@@ -51,21 +51,22 @@ if uploaded_file is not None:
     st.write("Running inference on the image...")
     results = model(img_bgr)
 
-    # Print the structure of the results object to understand its attributes
-    st.write("Results Object Structure:")
-    st.write(results)
+    # Check if the results are in a list format and extract predictions
+    if isinstance(results, list):
+        result = results[0]  # Take the first item in the list (the actual results)
+        boxes = result.boxes  # The predictions
 
-    # Safely access the prediction data based on the result structure
-    try:
+        # Display predictions
         st.write("Predictions:")
-        for result in results.pandas().xywh[0].itertuples():  # Use pandas result
-            class_name = result.name  # Access the name column from the pandas dataframe
-            confidence = result.confidence  # Confidence score
+        for box in boxes:
+            class_id = int(box.cls)  # Class ID
+            confidence = box.conf  # Confidence score
+            class_name = model.names[class_id]  # Class name
 
             st.write(f"{class_name} - Confidence: {confidence:.2f}")
 
         # Display the image with bounding boxes
-        annotated_image = results.plot()  # The image with detections
+        annotated_image = result.plot()  # The image with detections
         st.image(annotated_image, caption="Predicted Image", use_column_width=True)
 
         # Optionally, you can save the predictions
@@ -74,6 +75,3 @@ if uploaded_file is not None:
         annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
         cv2.imwrite(output_image_path, annotated_image)
         st.download_button("Download Predicted Image", data=open(output_image_path, "rb"), file_name="predicted_image.jpg")
-
-    except Exception as e:
-        st.error(f"An error occurred while processing predictions: {e}")
