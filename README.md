@@ -4,7 +4,7 @@ This repository contains a YOLOv8-based model trained to detect five types of fl
 
 ## Streamlit App
 
-You can interact with the trained model and test flower detection in real time through this [Streamlit app](https://flowersdetectionwithyolov8.streamlit.app/). Upload an image, and the model will predict the flower type with bounding boxes and confidence scores.
+You can interact with the trained model and predict the flower type from an image by using the [Streamlit app](https://flowersdetectionwithyolov8.streamlit.app/). Simply upload an image of a flower, and the model will predict the flower type with bounding boxes and confidence scores.
 
 ## Dataset
 
