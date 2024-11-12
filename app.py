@@ -51,18 +51,18 @@ if uploaded_file is not None:
     st.write("Running inference on the image...")
     results = model(img_bgr)
 
-    # Show the results
-    st.write(f"Predictions: {results.names}")  # Print the class names
-    st.write(f"Confidence: {results.conf}")   # Confidence of predictions
-    
+    # Show the results (corrected attribute access)
+    st.write("Predictions:")
+    for result in results.pred[0]:  # Access prediction results
+        class_id = int(result[5])  # Class ID
+        confidence = result[4]     # Confidence score
+        class_name = model.names[class_id]  # Class name
+
+        st.write(f"{class_name} - Confidence: {confidence:.2f}")
+
     # Display the image with bounding boxes
     annotated_image = results.plot()  # The image with detections
     st.image(annotated_image, caption="Predicted Image", use_column_width=True)
-
-    # Show detected class labels and confidence scores
-    st.write("Predicted Flower Type(s):")
-    for i, cls in enumerate(results.names):
-        st.write(f"{cls} - Confidence: {results.conf[i]:.2f}")
 
     # Optionally, you can save the predictions
     # Save the image to the server (optional)
