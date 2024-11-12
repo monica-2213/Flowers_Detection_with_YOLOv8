@@ -15,7 +15,7 @@ def download_model_from_github(url, model_path):
     st.success(f"Model downloaded successfully to {model_path}")
 
 # URL of the model file hosted on GitHub
-github_model_url = "https://github.com/yourusername/yourrepository/raw/main/path/to/best.pt"
+github_model_url = "https://github.com/monica-2213/Flowers_Detection_with_YOLOv8/raw/main/best.pt"
 
 # Local path where the model will be stored
 model_path = "/tmp/best.pt"  # or choose another directory
