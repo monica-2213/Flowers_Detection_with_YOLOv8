@@ -60,7 +60,7 @@ if uploaded_file is not None:
         st.write("Predictions:")
         for box in boxes:
             class_id = int(box.cls)  # Class ID
-            confidence = box.conf  # Confidence score
+            confidence = box.conf.item()  # Convert tensor to scalar value
             class_name = model.names[class_id]  # Class name
 
             st.write(f"{class_name} - Confidence: {confidence:.2f}")
