@@ -51,22 +51,29 @@ if uploaded_file is not None:
     st.write("Running inference on the image...")
     results = model(img_bgr)
 
-    # Show the results (corrected attribute access)
-    st.write("Predictions:")
-    for result in results.boxes:  # Access prediction results using 'boxes'
-        class_id = int(result.cls)  # Class ID
-        confidence = result.conf  # Confidence score
-        class_name = model.names[class_id]  # Class name
+    # Print the structure of the results object to understand its attributes
+    st.write("Results Object Structure:")
+    st.write(results)
 
-        st.write(f"{class_name} - Confidence: {confidence:.2f}")
+    # Safely access the prediction data based on the result structure
+    try:
+        st.write("Predictions:")
+        for result in results.pandas().xywh[0].itertuples():  # Use pandas result
+            class_name = result.name  # Access the name column from the pandas dataframe
+            confidence = result.confidence  # Confidence score
 
-    # Display the image with bounding boxes
-    annotated_image = results.plot()  # The image with detections
-    st.image(annotated_image, caption="Predicted Image", use_column_width=True)
+            st.write(f"{class_name} - Confidence: {confidence:.2f}")
 
-    # Optionally, you can save the predictions
-    # Save the image to the server (optional)
-    output_image_path = "/tmp/predicted_image.jpg"
-    annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
-    cv2.imwrite(output_image_path, annotated_image)
-    st.download_button("Download Predicted Image", data=open(output_image_path, "rb"), file_name="predicted_image.jpg")
+        # Display the image with bounding boxes
+        annotated_image = results.plot()  # The image with detections
+        st.image(annotated_image, caption="Predicted Image", use_column_width=True)
+
+        # Optionally, you can save the predictions
+        # Save the image to the server (optional)
+        output_image_path = "/tmp/predicted_image.jpg"
+        annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
+        cv2.imwrite(output_image_path, annotated_image)
+        st.download_button("Download Predicted Image", data=open(output_image_path, "rb"), file_name="predicted_image.jpg")
+
+    except Exception as e:
+        st.error(f"An error occurred while processing predictions: {e}")
