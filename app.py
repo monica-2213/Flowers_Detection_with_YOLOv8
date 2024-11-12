@@ -53,9 +53,9 @@ if uploaded_file is not None:
 
     # Show the results (corrected attribute access)
     st.write("Predictions:")
-    for result in results.pred[0]:  # Access prediction results
-        class_id = int(result[5])  # Class ID
-        confidence = result[4]     # Confidence score
+    for result in results.boxes:  # Access prediction results using 'boxes'
+        class_id = int(result.cls)  # Class ID
+        confidence = result.conf  # Confidence score
         class_name = model.names[class_id]  # Class name
 
         st.write(f"{class_name} - Confidence: {confidence:.2f}")
